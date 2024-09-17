@@ -3,32 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
     <title>Nome Academia</title>
 </head>
 <body>
-
+    
     <form>    
         <h1>Area de cadastro</h1>
         <fieldset>
-            <label>Nome:</label>
+
+            <label class="label_input">Nome:</label>
             <input type="text" id="nome" placeholder="Digite seu nome" required>
 
-            <label>CPF:</label>
+            <label class="label_input">CPF:</label>
             <input type="text" id="cpf" placeholder="Digite seu CPF" required>
 
-            <label>E-mail:</label>
+            <label class="label_input">E-mail:</label>
             <input type="email" id="email" placeholder="Digite seu e-mail" required>
 
-            <label>Telefone:</label>
+            <label class="label_input">Telefone:</label>
             <input type="tel" id="telefone" placeholder="Digite seu telefone" required>
 
-            <label>Data de Nascimento:</label>
+            <label class="label_input">Data de Nascimento:</label>
             <input type="date" id="nascimento" placeholder="dd-mm-aa" required>
             
-            <label>Peso:</label>
+            <label class="label_input">Peso:</label>
             <input type="range" id="peso" min="30" max="200" step="5" value="30" required>
             
-            <label>Altura:</label>
+            <label class="label_input">Altura:</label>
             <input type="range" id="altura" min="1.00" max="2.50" step="0.01" value="1.00" required>
         
             <button id="enviar" type="submit">Cadastrar</button>

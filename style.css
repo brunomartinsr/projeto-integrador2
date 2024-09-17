@@ -1,0 +1,19 @@
+form{
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+}
+
+fieldset{
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+    width: 25%;
+}
+
+.label_input{
+    color: blue;
+    margin: 5px;
+}
