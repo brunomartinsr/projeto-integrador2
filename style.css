@@ -49,7 +49,7 @@ fieldset{
     background-color: rgba(255, 255, 255, 0.92);
 }
 
-.buttom{
+#enviar{
     color: white;
     width: 50%;
     height: 30px;
@@ -63,10 +63,40 @@ fieldset{
     transition: background-color 0.3s ease;
 }
 
-.buttom:hover {
+#enviar:hover {
     background-color: rgb(124, 0, 0);
 }
 
-button:active {
+#enviar:active {
+    transform: scale(0.95);
+}
+
+a{
+    color: rgb(255, 255, 255);
+}
+a:hover{
+    color: rgb(124, 0, 0);
+}
+
+#login{
+    font-family: 'Lucida Bright';
+    color: rgb(255, 255, 255);
+    width: 40%;
+    height: 25px;
+    background-color: rgb(183, 32, 32);
+    border: none;
+    border-radius: 6px;
+    font-size: 20px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#login:hover{
+    background-color: rgb(124, 0,0);
+}
+
+#login:active{
     transform: scale(0.95);
 }
