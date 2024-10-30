@@ -31,3 +31,5 @@ async function connectionbd() {
 }
 
 connectionbd();
+
+module.exports = connectionbd;
