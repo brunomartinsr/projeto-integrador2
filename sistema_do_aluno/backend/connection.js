@@ -2,7 +2,7 @@ import oracledb from "oracledb";
 oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
 require("dotenv").config();
 
-async function connectionbd() {
+async function connectionBd() {
   let connect;
   if (
     !process.env.USER ||
@@ -28,4 +28,4 @@ async function connectionbd() {
   }
 }
 
-module.exports = connectionbd;
+module.exports = connectionBd;
