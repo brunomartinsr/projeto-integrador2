@@ -8,7 +8,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
 app.use(express.static('public'));
 
-app.post('/login', async (req, res) => {
+app.get('/login', async (req, res) => {
     const {cpf} = req.body;
 
     try {
