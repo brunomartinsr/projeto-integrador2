@@ -1,6 +1,8 @@
-const oracledb = require("oracledb");
+import oracledb from "oracledb";
+import dotenv from "dotenv";
+
 oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
-require("dotenv").config();
+dotenv.config();
 
 if (!process.env.USER || !process.env.PASSWORD || !process.env.CONNECTSTRING) {
   console.error("Faltam variáveis de ambiente.");
@@ -22,4 +24,4 @@ async function connectionBd() {
   }
 }
 
-module.exports = connectionBd;
+export default connectionBd;
