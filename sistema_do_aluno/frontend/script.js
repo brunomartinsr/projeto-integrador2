@@ -23,3 +23,45 @@ const dia = String(hoje.getDate()).padStart(2, '0');
 nascimento.min = `${anoMinimo}-${mes}-${dia}`;
 nascimento.max = `${anoMaximo}-${mes}-${dia}`;
 
+document.getElementById("cadastroForm").addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const nome = document.getElementById("nome").value;
+    const cpf = document.getElementById("cpf").value;
+    const email = document.getElementById("email").value;
+    const telefone = document.getElementById("telefone").value;
+    const nascimento = document.getElementById("nascimento").value;
+    const peso = document.getElementById("peso").value;
+    const altura = document.getElementById("altura").value;
+
+    const dados = {
+        nome: nome,
+        cpf: cpf,
+        email: email,
+        telefone: telefone,
+        nascimento: nascimento,
+        peso: peso,
+        altura: altura,
+    };
+
+    try {
+        const response = await fetch ('http://localhost:3000/cadastrar', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dados)
+        });
+
+        if (response.ok) {
+            const resposta = await response.json();
+            console.log('Cadastro realizado com sucesso: ', resposta);
+        }
+        else {
+            console.error('Erro ao cadastrar: ', response.status, response.statusText);
+        }
+    }
+    catch (error) {
+        console.error('Erro na requisição', error);
+    }
+});
