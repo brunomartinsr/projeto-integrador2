@@ -13,9 +13,9 @@ app.use(express.static("public"));
 
 app.post("/login", async (req, res) => {
   const { cpf } = req.body;
+  const connection = await connectionBd();
 
   try {
-    const connection = await connectionBd();
     const result = await connection.execute(
       `SELECT * FROM ALUNOS WHERE CPF = :cpf`,
       [cpf]
@@ -30,6 +30,8 @@ app.post("/login", async (req, res) => {
   } catch (erro) {
     console.error("Erro ao realizar o login: ", erro);
     res.status(500).send("Erro ao realizar o login");
+  } finally {
+    connection.close();
   }
 });
 
@@ -68,6 +70,7 @@ app.post("/cadastrar", (req, res) => {
         } else {
           res.status(200).send("Aluno cadastrado com sucesso.");
         }
+        conn.close();
       }
     );
   });
