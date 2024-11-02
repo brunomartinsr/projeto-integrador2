@@ -48,7 +48,11 @@ app.post("/cadastrar", (req, res) => {
     return;
   }
 
-  const sql = `INSERT INTO ALUNOS (NOME_COMPLETO, CPF, EMAIL, TELEFONE, PESO, ALTURA, DATA_DE_NASCIMENTO) VALUES (:nome, :cpf, :email, :telefone, :peso, :altura, :data_de_nascimento)`;
+  const sql = `
+    INSERT INTO ALUNOS (NOME_COMPLETO, CPF, EMAIL, TELEFONE, PESO, ALTURA, DATA_DE_NASCIMENTO)
+    VALUES (:nome, :cpf, :email, :telefone, :peso, :altura, TO_DATE(:data_de_nascimento, 'YYYY-MM-DD'))
+`;
+
 
   connectionBd().then((conn) => {
     conn.execute(
@@ -68,7 +72,8 @@ app.post("/cadastrar", (req, res) => {
           console.error(err);
           res.status(500).send("Erro ao cadastrar aluno.");
         } else {
-          res.status(200).send("Aluno cadastrado com sucesso.");
+          res.status(200).json({ message: "Aluno cadastrado com sucesso." });
+          res.redirect('../frontend/login.html')
         }
         conn.close();
       }

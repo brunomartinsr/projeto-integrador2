@@ -39,7 +39,7 @@ document.getElementById("cadastroForm").addEventListener("submit", async (event)
         cpf: cpf,
         email: email,
         telefone: telefone,
-        nascimento: nascimento,
+        data_de_nascimento: nascimento,
         peso: peso,
         altura: altura,
     };
@@ -53,12 +53,12 @@ document.getElementById("cadastroForm").addEventListener("submit", async (event)
             body: JSON.stringify(dados)
         });
 
-        if (response.ok) {
-            const resposta = await response.json();
-            console.log('Cadastro realizado com sucesso: ', resposta);
-        }
-        else {
-            console.error('Erro ao cadastrar: ', response.status, response.statusText);
+        if (!response.ok) {
+            const respostaErro = await response.text();
+            console.error('Erro ao cadastrar:', response.status, response.statusText, respostaErro);
+        } else {
+            const respostaSucesso = await response.json();
+            console.log('Cadastro realizado com sucesso:', respostaSucesso);
         }
     }
     catch (error) {
