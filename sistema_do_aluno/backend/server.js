@@ -15,7 +15,7 @@ app.post("/login", async (req, res) => {
   const { cpf } = req.body;
   const connection = await connectionBd();
 
-  console.log("Verificando o cpf: ", cpf)
+  console.log("Verificando o cpf: ", cpf);
 
   try {
     const result = await connection.execute(
@@ -24,11 +24,10 @@ app.post("/login", async (req, res) => {
     );
 
     if (result.rows.length > 0) {
-      console.log("Login realizado com o cpf: ", cpf)
+      console.log("Login realizado com o cpf: ", cpf);
       res.send("Login realizado com sucesso");
-      //   res.redirect("/relatorio.html");
     } else {
-      console.log("não foi possivel encontrar o cpf: ", cpf)
+      console.log("não foi possivel encontrar o cpf: ", cpf);
       res.status(404).send("Erro ao realizar o Login");
     }
   } catch (erro) {
@@ -57,8 +56,42 @@ app.post("/cadastrar", (req, res) => {
     VALUES (:nome, :cpf, :email, :telefone, :peso, :altura, TO_DATE(:data_de_nascimento, 'YYYY-MM-DD'))
 `;
 
-
   connectionBd().then((conn) => {
+    conn.execute(
+      `SELECT * FROM ALUNOS WHERE CPF = :cpf`,
+      [cpf],
+      (err, result) => {
+        if (result.rows.length > 0) {
+          res.status(400).send("CPF já cadastrado.");
+          conn.close();
+          return;
+        }
+      }
+    );
+
+    conn.execute(
+      sql,
+      {
+        nome,
+        cpf,
+        email,
+        telefone,
+        peso,
+        altura,
+        data_de_nascimento,
+      },
+      { autoCommit: true },
+      (err, result) => {
+        if (err) {
+          console.error(err);
+          res.status(500).send("Erro ao cadastrar aluno.");
+        } else {
+          res.status(200).json({ message: "Aluno cadastrado com sucesso." });
+        }
+        conn.close();
+      }
+    );
+
     conn.execute(
       sql,
       {
