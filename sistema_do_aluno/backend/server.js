@@ -15,6 +15,8 @@ app.post("/login", async (req, res) => {
   const { cpf } = req.body;
   const connection = await connectionBd();
 
+  console.log("Verificando o cpf: ", cpf)
+
   try {
     const result = await connection.execute(
       `SELECT * FROM ALUNOS WHERE CPF = :cpf`,
@@ -22,9 +24,11 @@ app.post("/login", async (req, res) => {
     );
 
     if (result.rows.length > 0) {
+      console.log("Login realizado com o cpf: ", cpf)
       res.send("Login realizado com sucesso");
       //   res.redirect("/relatorio.html");
     } else {
+      console.log("não foi possivel encontrar o cpf: ", cpf)
       res.status(404).send("Erro ao realizar o Login");
     }
   } catch (erro) {
@@ -73,7 +77,6 @@ app.post("/cadastrar", (req, res) => {
           res.status(500).send("Erro ao cadastrar aluno.");
         } else {
           res.status(200).json({ message: "Aluno cadastrado com sucesso." });
-          res.redirect('../frontend/login.html')
         }
         conn.close();
       }

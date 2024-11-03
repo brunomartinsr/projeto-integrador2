@@ -56,9 +56,15 @@ document.getElementById("cadastroForm").addEventListener("submit", async (event)
         if (!response.ok) {
             const respostaErro = await response.text();
             console.error('Erro ao cadastrar:', response.status, response.statusText, respostaErro);
+            alert("Erro ao cadastrar, dados invalidos!")
         } else {
             const respostaSucesso = await response.json();
             console.log('Cadastro realizado com sucesso:', respostaSucesso);
+            alert("Cadastro realizado com sucesso! Indo para a página de login...")
+
+            setTimeout(() => {
+                window.location.href = "login.html";
+            }, 900)
         }
     }
     catch (error) {
