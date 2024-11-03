@@ -42,7 +42,7 @@ app.post("/cadastrar", (req, res) => {
   const { nome, cpf, email, telefone, data_de_nascimento, peso, altura } =
     req.body;
 
-  if (!validaCPF(cpf) || !validaEmail(email)) {
+  if (!validaEmail(email)) {
     res
       .status(400)
       .send(
@@ -54,67 +54,50 @@ app.post("/cadastrar", (req, res) => {
   const sql = `
     INSERT INTO ALUNOS (NOME_COMPLETO, CPF, EMAIL, TELEFONE, PESO, ALTURA, DATA_DE_NASCIMENTO)
     VALUES (:nome, :cpf, :email, :telefone, :peso, :altura, TO_DATE(:data_de_nascimento, 'YYYY-MM-DD'))
-`;
+  `;
 
-  connectionBd().then((conn) => {
-    conn.execute(
-      `SELECT * FROM ALUNOS WHERE CPF = :cpf`,
-      [cpf],
-      (err, result) => {
-        if (result.rows.length > 0) {
-          res.status(400).send("CPF já cadastrado.");
-          conn.close();
-          return;
-        }
-      }
-    );
+  connectionBd()
+    .then((conn) => {
+      conn.execute(
+        `SELECT * FROM ALUNOS WHERE CPF = :cpf`,
+        [cpf],
+        (err, result) => {
+          if (err) {
+            console.error(err);
+            res.status(500).send("Erro ao consultar CPF.");
+            conn.close();
+            return;
+          }
 
-    conn.execute(
-      sql,
-      {
-        nome,
-        cpf,
-        email,
-        telefone,
-        peso,
-        altura,
-        data_de_nascimento,
-      },
-      { autoCommit: true },
-      (err, result) => {
-        if (err) {
-          console.error(err);
-          res.status(500).send("Erro ao cadastrar aluno.");
-        } else {
-          res.status(200).json({ message: "Aluno cadastrado com sucesso." });
-        }
-        conn.close();
-      }
-    );
+          if (result.rows.length > 0) {
+            res.status(400).send("CPF já cadastrado.");
+            conn.close();
+            return;
+          }
 
-    conn.execute(
-      sql,
-      {
-        nome,
-        cpf,
-        email,
-        telefone,
-        peso,
-        altura,
-        data_de_nascimento,
-      },
-      { autoCommit: true },
-      (err, result) => {
-        if (err) {
-          console.error(err);
-          res.status(500).send("Erro ao cadastrar aluno.");
-        } else {
-          res.status(200).json({ message: "Aluno cadastrado com sucesso." });
+          conn.execute(
+            sql,
+            { nome, cpf, email, telefone, peso, altura, data_de_nascimento },
+            { autoCommit: true },
+            (err, result) => {
+              if (err) {
+                console.error(err);
+                res.status(500).send("Erro ao cadastrar aluno.");
+              } else {
+                res
+                  .status(200)
+                  .json({ message: "Aluno cadastrado com sucesso." });
+              }
+              conn.close();
+            }
+          );
         }
-        conn.close();
-      }
-    );
-  });
+      );
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send("Erro ao conectar ao banco de dados.");
+    });
 });
 
 app.listen(PORT, () => {
