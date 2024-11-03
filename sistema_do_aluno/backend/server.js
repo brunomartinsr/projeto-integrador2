@@ -42,7 +42,7 @@ app.post("/cadastrar", (req, res) => {
   const { nome, cpf, email, telefone, data_de_nascimento, peso, altura } =
     req.body;
 
-  if (!validaEmail(email)) {
+  if (!validaCPF || !validaEmail(email)) {
     res
       .status(400)
       .send(
