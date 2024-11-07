@@ -12,7 +12,7 @@ body {
     align-items: center;
     height: 100vh; 
     margin: 0;
-    background-image: linear-gradient(to left, black, transparent), url("Imagens/ImagemFundo.jpg");
+    background-image: linear-gradient(to left, black, transparent), url("../Imagens/ImagemFundo.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
@@ -100,3 +100,4 @@ a:hover{
 #login:active{
     transform: scale(0.95);
 }
+
