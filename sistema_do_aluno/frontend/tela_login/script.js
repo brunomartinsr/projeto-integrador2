@@ -18,8 +18,8 @@ document
         window.location.href = "../tela_relatorio/index.html";
         // window.location.href = `../tela_relatorio/index.html/?cpf=${cpf}`;
       } else {
-        const errorMessage = await response.text();
-        alert("Erro ao realizar o login: " + errorMessage);
+        const { meesage } = await response.json();
+        alert(meesage);
       }
     } catch (error) {
       alert("Erro na requisição. Por favor, tente novamente.");

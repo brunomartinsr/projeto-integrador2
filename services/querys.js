@@ -9,14 +9,26 @@ export async function getAlunoByCpf(cpf, conn) {
   }
 }
 
+export async function checkHoras(cpf, conn, date) {
+  try {
+    const result = await conn.execute(
+      `SELECT HORA_ENTRADA, HORA_SAIDA FROM REGISTROS_CATRACA WHERE CPF_ALUNO = :cpf AND DATA_REGISTRO = TO_DATE(:date, 'YYYY-MM-DD')`,
+      [cpf, date]
+    );
+    return result.rows.length > 0 ? result.rows[0] : null;
+  } catch (err) {
+    throw new Error("Erro ao consultar horas: " + err);
+  }
+}
+
 export async function getHorasSemanais(cpf, conn) {
   try {
     const result = await conn.execute(
       `
-        SELECT HORA_TOTAL, DATA_ACESSO 
-        FROM CONTROLE_CATRACA 
-        WHERE CPF_ALUNO = :cpf AND DATA_ACESSO >= SYSDATE - 7 AND DATA_ACESSO <= SYSDATE 
-        ORDER BY DATA_ACESSO DESC
+        SELECT HORA_TOTAL, DATA_REGISTRO 
+        FROM REGISTROS_CATRACA 
+        WHERE CPF_ALUNO = :cpf AND DATA_REGISTRO >= SYSDATE - 7 AND DATA_REGISTRO <= SYSDATE 
+        ORDER BY DATA_REGISTRO DESC
       `,
       [cpf]
     );

@@ -8,6 +8,7 @@ import {
 } from "../../services/querys.js";
 
 const router = express.Router();
+const conn = await connectionBd();
 
 // Rota de login
 router.post("/login", async (req, res) => {
@@ -25,8 +26,7 @@ router.post("/login", async (req, res) => {
   console.log("Verificando o cpf: ", cpf);
 
   try {
-    const connection = await connectionBd();
-    const cpfExistente = await getAlunoByCpf(cpf, connection);
+    const cpfExistente = await getAlunoByCpf(cpf, conn);
 
     if (cpfExistente) {
       console.log("Login realizado com o cpf: ", cpf);
@@ -35,11 +35,13 @@ router.post("/login", async (req, res) => {
         .json({ message: "Login realizado com sucesso!", cpf: cpf });
     } else {
       console.log("Não foi possivel encontrar o cpf: ", cpf);
-      res.status(404).send("Erro ao realizar o Login");
+      res.status(404).json({ message: "CPF não encontrado." });
     }
   } catch (erro) {
     console.error("Erro ao realizar o login: ", erro);
-    res.status(500).send("Erro ao realizar o login");
+    res.status(500).send(erro);
+  } finally {
+    conn.close();
   }
 });
 
@@ -58,8 +60,6 @@ router.post("/cadastrar", async (req, res) => {
   }
 
   try {
-    const conn = await connectionBd();
-
     const cpfExistente = await getAlunoByCpf(cpf, conn);
     if (cpfExistente) {
       res.status(400).send("CPF já cadastrado.");
@@ -77,10 +77,11 @@ router.post("/cadastrar", async (req, res) => {
       { autoCommit: true }
     );
     res.status(200).json({ message: "Aluno cadastrado com sucesso." });
-    conn.close();
   } catch (err) {
     console.error(err);
     res.status(500).send("Erro ao conectar ao banco de dados: " + err);
+  } finally {
+    conn.close();
   }
 });
 
@@ -97,8 +98,6 @@ router.get("/relatorio/:cpf", async (req, res) => {
   const { cpf } = req.params;
 
   try {
-    const conn = await connectionBd();
-
     const aluno = await getAlunoByCpf(cpf, conn);
     if (!aluno) {
       return res.status(404).send("CPF não encontrado.");
@@ -113,9 +112,10 @@ router.get("/relatorio/:cpf", async (req, res) => {
       classificacao: classificacao,
       horas_semanais: horasSemanais,
     });
-    conn.close();
   } catch (err) {
     res.status(500).send(err.message);
+  } finally {
+    conn.close();
   }
 });
 
