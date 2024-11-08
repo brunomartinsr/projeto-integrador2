@@ -1,25 +1,80 @@
-* {
+body{
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, rgb(35, 32, 32), rgb(49, 1, 1));
+    display: flex;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-  }
-  
-body {
-    display: flex;
-    height: 100vh;
-    font-family: Arial, sans-serif;
-    background-image: linear-gradient(to left, black, rgb(95, 6, 6))
+    font-family: Arial, Helvetica, sans-serif;
 }
-  
-.sidebar {
+
+.sidebar p{
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+    color:rgb(255, 255, 255)
+}
+
+.sidebar .avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+.info_freq{
     display: flex;
-    width: 150px;
-    background-color: rgb(35, 34, 34);
-    color: white;
-    flex-direction: column;
-    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    margin-left: 220px;
+    align-items: center;     
+    justify-content: center;
+    margin-right: 200px;    
+    gap: 60px;
+}
+
+.info_clas{
+    border: 2px solid rgba(255, 255, 255, 0.612);
+    border-radius: 8px;
     padding: 10px;
+    background: linear-gradient(to right, rgb(29, 26, 26), rgb(69, 2, 2));
+    box-shadow: 0 0 8px rgb(255, 255, 255, 0.6);
+    flex: 1;
+    text-align: center;
+    height: 65px;
+    width: 250px;
 }
-  
-  
-  
+
+.card{
+    border: 2px solid rgba(255, 255, 255, 0.612);
+    border-radius: 8px;
+    padding: 10px;
+    background: linear-gradient(to right, rgb(29, 26, 26), rgb(69, 2, 2));
+    box-shadow: 0 0 8px rgb(255, 255, 255, 0.6);
+    flex: 1;
+    text-align: center;
+    height: 65px;
+    width: 250px; 
+}
+
+.card h2, .info_clas h2{
+    font-size:  1.4em;
+    color: rgb(255, 255, 255);
+    margin-bottom: 10px;
+}
+
+.card p, .info_clas p{
+    font-size: 1.1em;
+    color: rgb(80, 80, 80);
+}
+
+.value {
+    font-size: 1.2em;
+    font-family: Helvetica, sans-serif; 
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+    margin-top: 20px;
+    margin-top: 175px;
+}
