@@ -13,8 +13,10 @@ document
       });
 
       if (response.ok) {
+        // const { cpf } = await response.json();
         alert("Login realizado com sucesso!");
-        window.location.href = "relatorio.html";
+        window.location.href = "../tela_relatorio/index.html";
+        // window.location.href = `../tela_relatorio/index.html/?cpf=${cpf}`;
       } else {
         const errorMessage = await response.text();
         alert("Erro ao realizar o login: " + errorMessage);

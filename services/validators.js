@@ -1,4 +1,4 @@
-export const validaCPF = (CPF) => {
+export const checkCPF = (CPF) => {
   const CPFnumerico = [];
   for (let digito of CPF) {
     CPFnumerico.push(parseInt(digito));
@@ -31,7 +31,7 @@ export const validaCPF = (CPF) => {
   }
 };
 
-export const validaEmail = (email) => {
+export const checkEmail = (email) => {
   const regex = /\S+@\S+\.\S+/;
   return regex.test(email);
 };

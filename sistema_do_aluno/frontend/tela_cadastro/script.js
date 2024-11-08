@@ -69,7 +69,7 @@ document
         alert("Cadastro realizado com sucesso! Indo para a página de login...");
 
         setTimeout(() => {
-          window.location.href = "login.html";
+          window.location.href = "../tela_login/index.html";
         }, 900);
       }
     } catch (error) {

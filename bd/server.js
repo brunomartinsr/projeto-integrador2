@@ -11,6 +11,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 app.use("/aluno", router_aluno);
+// app.use("/catraca", router_catraca);
+// app.use("/gerente", router_gerente);
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);
