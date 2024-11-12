@@ -13,10 +13,9 @@ document
       });
 
       if (response.ok) {
-        // const { cpf } = await response.json();
+        const { id } = await response.json();
         alert("Login realizado com sucesso!");
-        window.location.href = "../tela_relatorio/index.html";
-        // window.location.href = `../tela_relatorio/index.html/?cpf=${cpf}`;
+        window.location.href = `../tela_relatorio/index.html/?id=${id}`;
       } else {
         const { meesage } = await response.json();
         alert(meesage);
