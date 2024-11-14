@@ -1,6 +1,6 @@
 import express from "express";
 import connectionBd from "../../bd/connection.js";
-import { getAluno } from "../../services/querys.js";
+import { getAlunoByCpf } from "../../services/querys.js";
 
 const router = express.Router();
 const conn = await connectionBd();
@@ -8,7 +8,7 @@ const conn = await connectionBd();
 router.post("/registrar", async (req, res) => {
   const { cpf, hora_entrada, hora_saida, data_registro } = req.body;
 
-  if (!checkCPF(cpf) || getAluno(cpf, null, conn) == null) {
+  if (!checkCPF(cpf) || getAlunoByCpf(cpf, conn) == null) {
     res.status(400).send("CPF inválido ou não cadastrado.");
     return;
   } else if (hora_entrada >= hora_saida) {

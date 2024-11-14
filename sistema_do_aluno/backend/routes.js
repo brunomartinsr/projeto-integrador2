@@ -2,10 +2,10 @@ import express from "express";
 import connectionBd from "../../bd/connection.js";
 import { checkCPF, checkEmail } from "../../services/validators.js";
 import {
-  getAluno,
   getHorasSemanais,
   atualizarClassificacao,
-  getAluno,
+  getAlunoById,
+  getAlunoByCpf,
 } from "../../services/querys.js";
 
 const router = express.Router();
@@ -27,7 +27,7 @@ router.post("/login", async (req, res) => {
   console.log("Verificando o cpf: ", cpf);
 
   try {
-    const alunoExistente = await getAluno(cpf, null, conn);
+    const alunoExistente = await getAlunoByCpf(cpf, conn);
 
     if (alunoExistente) {
       res
@@ -60,7 +60,7 @@ router.post("/cadastrar", async (req, res) => {
     return;
   }
 
-  const cpfExistente = await getAluno(cpf, null, conn);
+  const cpfExistente = await getAlunoByCpf(cpf, conn);
   if (cpfExistente) {
     res.status(400).send("CPF já cadastrado.");
     return;
@@ -99,7 +99,7 @@ router.get("/relatorio/:id", async (req, res) => {
   const { id } = req.params;
 
   try {
-    const aluno = await getAluno(null, id, conn);
+    const aluno = await getAlunoById(id, conn);
     if (!aluno) {
       return res.status(404).send("Aluno não encontrado.");
     }

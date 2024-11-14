@@ -1,18 +1,20 @@
-export async function getAluno(cpf = null, id = null, conn) {
+export async function getAlunoById(id, conn) {
   try {
-    let result;
-    if (cpf == null) {
-      result = await conn.execute(`SELECT * FROM ALUNOS WHERE ID = :id`, [id]);
-    } else {
-      result = await conn.execute(`SELECT * FROM ALUNOS WHERE CPF = :cpf`, [
-        cpf,
-      ]);
-    }
-    return result.rows.length > 0 ? result.rows[0] : null;
-  } catch (err) {
+    const result = await conn.execute(`SELECT * FROM ALUNOS WHERE ID = :id`, [id]);
+    return result.rows.length > 0 ? result.row[0] : null
+  } catch(err) {
+    throw new Error("Erro ao consultar ID: " + err);
+  }
+} 
+
+export async function getAlunoByCpf(cpf, conn) {
+  try {
+    const result = await conn.execute(`SELECT * FROM ALUNOS WHERE CPF = :cpf`, [cpf]);
+    return result.rows.length > 0 ? result.row[0] : null
+  } catch(err) {
     throw new Error("Erro ao consultar CPF: " + err);
   }
-}
+} 
 
 export async function checkHoras(cpf, conn, date) {
   try {
