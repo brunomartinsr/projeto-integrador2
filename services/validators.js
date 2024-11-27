@@ -13,7 +13,7 @@ export const checkCPF = (CPF) => {
     soma += CPFnumerico[10 - c] * c;
   }
 
-  const digito_1 = 11 - (soma % 11);
+  let digito_1 = 11 - (soma % 11);
   if (digito_1 >= 10) digito_1 = 0;
 
   soma = 0;
@@ -21,7 +21,7 @@ export const checkCPF = (CPF) => {
     soma += CPFnumerico[11 - c] * c;
   }
 
-  const digito_2 = 11 - (soma % 11);
+  let digito_2 = 11 - (soma % 11);
   if (digito_2 >= 10) digito_2 = 0;
 
   if (digito_1 === CPFnumerico[9] && digito_2 === CPFnumerico[10]) {

@@ -9,26 +9,29 @@ import {
 } from "../../services/querys.js";
 
 const router = express.Router();
-const conn = await connectionBd();
 
 // Rota de login
 router.post("/login", async (req, res) => {
-  const { cpf } = req.body;
-
-  if (!checkCPF(cpf)) {
-    res
-      .status(400)
-      .send(
-        "CPF inválido, por favor verifique o campo e preencha corretamente."
-      );
-    return;
-  }
-
-  console.log("Verificando o cpf: ", cpf);
+  let conn;
 
   try {
-    const alunoExistente = await getAlunoByCpf(cpf, conn);
+    conn = await connectionBd();
 
+    const { cpf } = req.body;
+
+    if (!checkCPF(cpf)) {
+      res
+        .status(400)
+        .send(
+          "CPF inválido, por favor verifique o campo e preencha corretamente."
+        );
+      return;
+    }
+
+    console.log("Verificando o cpf: ", cpf);
+
+    const alunoExistente = await getAlunoByCpf(cpf, conn);
+    console.log(alunoExistente)
     if (alunoExistente) {
       res
         .status(200)
@@ -42,31 +45,35 @@ router.post("/login", async (req, res) => {
   } catch (erro) {
     res.status(500).send(erro);
   } finally {
-    conn.close();
+    if (conn) await conn.close();
   }
 });
 
 // Rota de cadastro
 router.post("/cadastrar", async (req, res) => {
-  const { nome, cpf, email, telefone, data_de_nascimento, peso, altura } =
-    req.body;
-
-  if (!checkCPF(cpf) || !checkEmail(email)) {
-    res
-      .status(400)
-      .send(
-        "Dados inválidos, por favor verifique os campos e preencha corretamente."
-      );
-    return;
-  }
-
-  const cpfExistente = await getAlunoByCpf(cpf, conn);
-  if (cpfExistente) {
-    res.status(400).send("CPF já cadastrado.");
-    return;
-  }
+  let conn;
 
   try {
+    conn = await connectionBd();
+
+    const { nome, cpf, email, telefone, data_de_nascimento, peso, altura } =
+    req.body;
+
+    if (!checkCPF(cpf) || !checkEmail(email)) {
+      res
+        .status(400)
+        .send(
+          "Dados inválidos, por favor verifique os campos e preencha corretamente."
+        );
+      return;
+    }
+
+    const cpfExistente = await getAlunoByCpf(cpf, conn);
+    if (cpfExistente) {
+      res.status(400).send("CPF já cadastrado.");
+      return;
+    }
+
     const sql = `
       INSERT INTO ALUNOS (NOME_COMPLETO, CPF, EMAIL, TELEFONE, PESO, ALTURA, DATA_DE_NASCIMENTO)
       VALUES (:nome, :cpf, :email, :telefone, :peso, :altura, TO_DATE(:data_de_nascimento, 'YYYY-MM-DD'))
@@ -82,7 +89,7 @@ router.post("/cadastrar", async (req, res) => {
     console.error(err);
     res.status(500).send("Erro ao conectar ao banco de dados: " + err);
   } finally {
-    conn.close();
+    if (conn) await conn.close();
   }
 });
 
@@ -96,9 +103,13 @@ function determinarClassificacao(horasSemanais) {
 
 // Rota para obter o relatório do aluno por ID
 router.get("/relatorio/:id", async (req, res) => {
-  const { id } = req.params;
+  let conn
 
   try {
+    conn = await connectionBd();
+
+    const { id } = req.params;
+
     const aluno = await getAlunoById(id, conn);
     if (!aluno) {
       return res.status(404).send("Aluno não encontrado.");
@@ -117,7 +128,7 @@ router.get("/relatorio/:id", async (req, res) => {
   } catch (err) {
     res.status(500).send(err.message);
   } finally {
-    conn.close();
+    if(conn) await conn.close();
   }
 });
 

@@ -17,8 +17,8 @@ document
         alert("Login realizado com sucesso!");
         window.location.href = `../tela_relatorio/index.html/?id=${id}`;
       } else {
-        const { meesage } = await response.json();
-        alert(meesage);
+        const { message } = await response.json();
+        alert(message);
       }
     } catch (error) {
       alert("Erro na requisição. Por favor, tente novamente.");

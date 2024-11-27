@@ -1,13 +1,13 @@
 import express from "express";
 import cors from "cors";
 import router_aluno from "../sistema_do_aluno/backend/routes.js";
-import router_catraca from "../sistema_catraca/backend/routes.js";
+import router_catraca from "../Sistema_catraca/backend/routes.js";
 
 const app = express();
 const PORT = 3000;
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({ origin: "*" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
