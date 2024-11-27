@@ -1,3 +1,5 @@
+import { allCaps, allMinus, formatDate } from "../../../services/formaters.js";
+
 document.addEventListener("DOMContentLoaded", function () {
   const peso_range = document.getElementById("peso");
   const peso_valor = document.getElementById("peso_valor");
@@ -36,11 +38,11 @@ document
     const altura = document.getElementById("altura").value;
 
     const dados = {
-      nome: nome,
+      nome: allCaps(nome),
       cpf: cpf,
-      email: email,
+      email: allMinus(email),
       telefone: telefone,
-      data_de_nascimento: nascimento,
+      data_de_nascimento: formatDate(new Date(nascimento)),
       peso: peso,
       altura: altura,
     };
