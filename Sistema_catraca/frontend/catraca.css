@@ -1,54 +1,89 @@
-body{
-    background:rgb(35, 32, 32);
+body {
+    background: rgb(35, 32, 32);
+    margin: 0;
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 30px;
+    height: 100vh;
+    justify-content: center;
 }
 
-form{
+form {
+    margin-bottom: 50px;
     display: flex;
     flex-direction: column;
     justify-items: center;
     align-items: center;
-    color: rgb(255, 255, 255); 
+    color: rgb(255, 255, 255);
 }
 
-fieldset{
+
+fieldset {
     display: flex;
     border: none;
     border-radius: 18px;
     flex-direction: column;
     justify-items: center;
     align-items: center;
-    width: 120%;
+    width: 300px; 
 }
 
-#catraca{
+#label_input {
+    color: rgb(255, 255, 255);
+    margin: 5px;
+    font-size: 17px;
+    font-family: Arial, Helvetica;
+    width: 100%; 
+    box-sizing: border-box; 
+}
+
+#catraca {
     cursor: pointer;
+    margin-top: 20px; 
 }
 
-div{
+div {
     display: flex;
-    border: none;
-    border-radius: 18px;
     flex-direction: column;
-    justify-items: center;
+    justify-content: center; 
     align-items: center;
+    gap: 20px;
     width: 100%;
-    margin-top: 100px;
-    
 }
 
-.controles{
+.controles {
+    display: flex; 
     flex-direction: row;
-    align-items: center;
-    justify-items: center;
-    margin-left: 45%;
+    justify-content: center; 
+    align-items: center; 
     gap: 10px;
     cursor: pointer;
 }
 
-#saida:active{
+.button {
+    color: white;
+    height: 30px;
+    background-color: rgb(183, 32, 32);
+    border: none;
+    border-radius: 6px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#entrada, #saida {
+    width: 100px;
+}
+
+#saida:active {
     transform: scale(0.95);
 }
 
-#CPF_catraca{
-    margin-bottom: 20px;
+#CPF_catraca {
+    margin-bottom: 10px;
+}
+
+#label_input {
+    color: black;
 }
