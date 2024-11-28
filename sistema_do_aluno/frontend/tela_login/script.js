@@ -15,7 +15,7 @@ document
       if (response.ok) {
         const { id } = await response.json();
         alert("Login realizado com sucesso!");
-        window.location.href = `../tela_relatorio/index.html/?id=${id}`;
+        window.location.href = `../tela_relatorio/relatorio.html?id=${id}`;
       } else {
         const { message } = await response.json();
         alert(message);
