@@ -9,19 +9,26 @@ if (!process.env.USER || !process.env.PASSWORD || !process.env.CONNECTSTRING) {
   process.exit(1);
 }
 
-async function connectionBd() {
-  let connect;
+async function createPool() {
   try {
-    connect = await oracledb.getConnection({
+    await oracledb.createPool({
       user: process.env.USER,
       password: process.env.PASSWORD,
       connectString: process.env.CONNECTSTRING,
+      poolMin: 10,
+      poolMax: 100,
+      poolIncrement: 10,
     });
-    console.log("Conectado ao banco de dados");
-    return connect; // Retorna a conexão para ser usada
+    console.log("Pool de conexões criado com sucesso.");
   } catch (err) {
-    console.error("Erro ao conectar:", err);
+    console.error("Erro ao criar o pool de conexões: ", err);
   }
 }
-
-export default connectionBd;
+async function getConnection() {
+  try {
+    return await oracledb.getConnection();
+  } catch (err) {
+    console.error("Erro ao obter conexão: ", err);
+  }
+}
+export { createPool, getConnection };

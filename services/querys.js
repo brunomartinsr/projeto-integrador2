@@ -36,7 +36,7 @@ export async function getHorasSemanais(cpf, conn) {
   try {
     const result = await conn.execute(
       `
-        SELECT HORA_TOTAL, DATA_REGISTRO 
+        SELECT TO_CHAR(HORA_TOTAL, 'HH24:MI:SS') AS HORA_TOTAL, DATA_REGISTRO 
         FROM REGISTROS_CATRACA 
         WHERE CPF_ALUNO = :cpf AND DATA_REGISTRO >= SYSDATE - 7 AND DATA_REGISTRO <= SYSDATE 
         ORDER BY DATA_REGISTRO DESC
@@ -44,12 +44,31 @@ export async function getHorasSemanais(cpf, conn) {
       [cpf]
     );
 
-    let totalHoras = result.rows.reduce(
-      (acc, registro) => acc + registro.HORA_TOTAL,
-      0
-    );
-    return totalHoras / 7;
+    if (result.rows.length === 0) {
+      console.log(
+        "Nenhum registro encontrado para o CPF e intervalo de datas fornecidos."
+      );
+      return 0;
+    }
+
+    let totalHoras = result.rows.reduce((acc, registro) => {
+      const hora_total = registro.HORA_TOTAL;
+      const timeString = hora_total.substring(4, 12);
+      const parts = timeString.split(":");
+      const horas = parseInt(parts[0], 10);
+      const minutos = parseInt(parts[1], 10);
+      const segundos = parseInt(parts[2], 10);
+
+      return acc + horas * 3600 + minutos * 60 + segundos;
+    }, 0);
+
+    const mediaHoras = totalHoras / (7 * 3600);
+    const horasInteiras = Math.floor(mediaHoras);
+    const minutos = Math.round((mediaHoras - horasInteiras) * 60);
+    const horasArredondadas = minutos >= 30 ? horasInteiras + 1 : horasInteiras;
+    return horasArredondadas;
   } catch (err) {
+    console.error("Erro ao obter horas semanais:", err);
     throw new Error("Erro ao obter horas semanais: " + err);
   }
 }

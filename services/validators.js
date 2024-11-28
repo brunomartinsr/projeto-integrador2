@@ -1,4 +1,8 @@
 export const checkCPF = (CPF) => {
+  if (typeof CPF !== "string") {
+    CPF = CPF.toString();
+  }
+
   const CPFnumerico = [];
   for (let digito of CPF) {
     CPFnumerico.push(parseInt(digito));

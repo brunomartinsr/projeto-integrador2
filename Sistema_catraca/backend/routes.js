@@ -1,19 +1,19 @@
 import express from "express";
-import connectionBd from "../../bd/connection.js";
+import { createPool, getConnection } from "../../bd/connection.js";
 import { getAlunoByCpf } from "../../services/querys.js";
 import { formatTime, formatDate } from "../../services/formaters.js";
+import { checkCPF } from "../../services/validators.js";
 
 const router = express.Router();
+createPool();
 
 router.post("/registrar", async (req, res) => {
   let conn;
-
   try {
-    conn = await connectionBd();
-
+    conn = await getConnection();
     const { cpf, hora_entrada, hora_saida, data_registro } = req.body;
-    const entrada = new Date(hora_entrada);
-    const saida = new Date(hora_saida);
+    const entrada = new Date(`1970-01-01T${hora_entrada}Z`);
+    const saida = new Date(`1970-01-01T${hora_saida}Z`);
     const dataRegistro = new Date(data_registro);
 
     if (!checkCPF(cpf) || getAlunoByCpf(cpf, conn) == null) {
@@ -30,10 +30,14 @@ router.post("/registrar", async (req, res) => {
     const horaSaidaFormated = formatTime(saida);
     const dataRegistroFormated = formatDate(dataRegistro);
 
-
     await conn.execute(
-      `INSERT INTO REGISTROS_CATRACA (CPF_ALUNO, HORA_ENTRADA, HORA_SAIDA, DATA_REGISTRO) VALUES (:cpf, TO_DATE(:hora_entrada, 'HH24:MI:SS'), TO_DATE(:hora_saida, 'HH24:MI:SI'), TO_DATE(:data_registro, 'YYYY-MM-DD'))`,
-      [cpf, horaEntradaFormated, horaSaidaFormated, dataRegistroFormated],
+      `INSERT INTO REGISTROS_CATRACA (CPF_ALUNO, HORA_ENTRADA, HORA_SAIDA, DATA_REGISTRO) VALUES (:cpf, TO_TIMESTAMP(:hora_entrada, 'HH24:MI:SS'), TO_TIMESTAMP(:hora_saida, 'HH24:MI:SS'), TO_DATE(:data_registro, 'YYYY-MM-DD'))`,
+      {
+        cpf,
+        hora_entrada: horaEntradaFormated,
+        hora_saida: horaSaidaFormated,
+        data_registro: dataRegistroFormated,
+      },
       { autoCommit: true }
     );
     res.status(200).json({ message: "Acesso registrado com sucesso." });
@@ -41,7 +45,11 @@ router.post("/registrar", async (req, res) => {
     console.error("Erro ao registrar acesso: ", err);
     res.status(500).send("Erro ao registrar acesso: " + err.message);
   } finally {
-    if(conn) await conn.close();
+    try {
+      await conn.close();
+    } catch (err) {
+      console.error("Erro ao fechar a conexão: ", err);
+    }
   }
 });
 

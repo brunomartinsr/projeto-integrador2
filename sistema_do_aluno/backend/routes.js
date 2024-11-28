@@ -1,5 +1,5 @@
 import express from "express";
-import connectionBd from "../../bd/connection.js";
+import { createPool, getConnection } from "../../bd/connection.js";
 import { checkCPF, checkEmail } from "../../services/validators.js";
 import {
   getHorasSemanais,
@@ -9,14 +9,13 @@ import {
 } from "../../services/querys.js";
 
 const router = express.Router();
+createPool();
 
 // Rota de login
 router.post("/login", async (req, res) => {
   let conn;
-
   try {
-    conn = await connectionBd();
-
+    conn = await getConnection();
     const { cpf } = req.body;
 
     if (!checkCPF(cpf)) {
@@ -31,33 +30,33 @@ router.post("/login", async (req, res) => {
     console.log("Verificando o cpf: ", cpf);
 
     const alunoExistente = await getAlunoByCpf(cpf, conn);
-    console.log(alunoExistente)
+    console.log(alunoExistente);
     if (alunoExistente) {
-      res
-        .status(200)
-        .json({
-          message: "Login realizado com sucesso!",
-          id: alunoExistente.ID,
-        });
+      res.status(200).json({
+        message: "Login realizado com sucesso!",
+        id: alunoExistente.ID,
+      });
     } else {
       res.status(404).json({ message: "CPF não encontrado." });
     }
   } catch (erro) {
     res.status(500).send(erro);
   } finally {
-    if (conn) await conn.close();
+    try {
+      await conn.close();
+    } catch (err) {
+      console.error("Erro ao fechar a conexão: ", err);
+    }
   }
 });
 
 // Rota de cadastro
 router.post("/cadastrar", async (req, res) => {
   let conn;
-
   try {
-    conn = await connectionBd();
-
+    conn = await getConnection();
     const { nome, cpf, email, telefone, data_de_nascimento, peso, altura } =
-    req.body;
+      req.body;
 
     if (!checkCPF(cpf) || !checkEmail(email)) {
       res
@@ -89,7 +88,11 @@ router.post("/cadastrar", async (req, res) => {
     console.error(err);
     res.status(500).send("Erro ao conectar ao banco de dados: " + err);
   } finally {
-    if (conn) await conn.close();
+    try {
+      await conn.close();
+    } catch (err) {
+      console.error("Erro ao fechar a conexão: ", err);
+    }
   }
 });
 
@@ -103,23 +106,21 @@ function determinarClassificacao(horasSemanais) {
 
 // Rota para obter o relatório do aluno por ID
 router.get("/relatorio/:id", async (req, res) => {
-  let conn
-
+  let conn;
   try {
-    conn = await connectionBd();
-
+    conn = await getConnection();
     const { id } = req.params;
 
     const aluno = await getAlunoById(id, conn);
     if (!aluno) {
       return res.status(404).send("Aluno não encontrado.");
     }
-    const { cpf } = aluno;
+    const { CPF } = aluno;
 
-    const horasSemanais = await getHorasSemanais(cpf, conn);
+    const horasSemanais = await getHorasSemanais(CPF, conn);
     const classificacao = determinarClassificacao(horasSemanais);
 
-    await atualizarClassificacao(cpf, classificacao, conn);
+    await atualizarClassificacao(CPF, classificacao, conn);
 
     res.status(200).json({
       classificacao: classificacao,
@@ -128,7 +129,11 @@ router.get("/relatorio/:id", async (req, res) => {
   } catch (err) {
     res.status(500).send(err.message);
   } finally {
-    if(conn) await conn.close();
+    try {
+      await conn.close();
+    } catch (err) {
+      console.error("Erro ao fechar a conexão: ", err);
+    }
   }
 });
 
