@@ -1,14 +1,29 @@
 body{
     font-family: Arial, sans-serif;
-    background:  rgb(35, 32, 32);
+    background: rgb(26, 25, 25);
     display: flex;
     margin: 0;
     padding: 0;
     font-family: Arial, Helvetica, sans-serif;
 }
 
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgb(30, 30, 30);
+    width: 200px;
+    height: 100vh; 
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 30px;
+    box-shadow: 3px 0 10px rgba(62, 2, 2, 0.7);
+}
+
 .sidebar p{
-    width: 80px;
+    width: 130px;
     height: 80px;
     border-radius: 50%;
     object-fit: cover;
@@ -27,11 +42,11 @@ body{
 .info_freq{
     display: flex;
     gap: 20px;
-    padding: 20px;
-    margin-left: 220px;
+    padding: 200px;
+    margin-left: 220px;;
     align-items: center;     
     justify-content: center;
-    margin-right: 200px;    
+    margin-right: 200px;
     gap: 60px;
 }
 
@@ -51,11 +66,11 @@ body{
     border: 2px solid rgba(255, 255, 255, 0.612);
     border-radius: 8px;
     padding: 10px;
-    background: linear-gradient(to right, rgb(29, 26, 26), rgb(69, 2, 2));
+    background: linear-gradient(to right, rgb(29, 26, 26), rgb(62, 20, 2));
     box-shadow: 0 0 8px rgb(255, 255, 255, 0.6);
     flex: 1;
     text-align: center;
-    height: 65px;
+    height: 90px;
     width: 250px; 
 }
 
@@ -72,9 +87,13 @@ body{
 
 .value {
     font-size: 1.2em;
-    font-family: Helvetica, sans-serif; 
+    font-family: Helvetica, sans-serif;  
     color: rgb(255, 255, 255);
     font-weight: bold;
     margin-top: 20px;
-    margin-top: 175px;
+    margin-top: 20px; 
+}
+
+#classificacao {
+    font-size: 1em;
 }
