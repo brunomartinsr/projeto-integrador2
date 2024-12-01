@@ -27,4 +27,4 @@ document.addEventListener("DOMContentLoaded", () => {
             window.location.href = "../tela_login/index.html";
         }, 600);
     }
-})
+})  
