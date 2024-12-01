@@ -19,7 +19,6 @@ async function createPool() {
       poolMax: 100,
       poolIncrement: 10,
     });
-    console.log("Pool de conexões criado com sucesso.");
   } catch (err) {
     console.error("Erro ao criar o pool de conexões: ", err);
   }

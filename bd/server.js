@@ -1,7 +1,8 @@
 import express from "express";
 import cors from "cors";
 import router_aluno from "../sistema_do_aluno/backend/routes.js";
-import router_catraca from "../Sistema_catraca/backend/routes.js";
+import router_catraca from "../sistema_catraca/backend/routes.js";
+import router_gerente from "../sistema_gerente/backend/routes.js";
 
 const app = express();
 const PORT = 3000;
@@ -13,7 +14,7 @@ app.use(express.static("public"));
 
 app.use("/aluno", router_aluno);
 app.use("/catraca", router_catraca);
-// app.use("/gerente", router_gerente);
+app.use("/gerente", router_gerente);
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);

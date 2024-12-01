@@ -4,24 +4,24 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="catraca.css" />
-    <script src="catraca.js" defer></script>
+    <script type="module" defer src="catraca.js"></script>
     <title>Catraca</title>
   </head>
   <body>
     <form>
-        <fieldset>
-            <labe id="CPF_catraca">REGISTRAR ENTRADA</labe>
-            <input type="text"
-            id="label_input"
-            placeholder="Digite seu CPF."
-            required
-            />
-            <button id="catraca" type="submit" class="button">Conferir CPF</button>
-        </fieldset>
-    </form>
-
-    <div class="controles">
+      <fieldset>
+        <labe id="label_cpf">REGISTRAR ENTRADA</labe>
+        <input
+          type="text"
+          id="cpf_input"
+          placeholder="Digite seu CPF:"
+          required
+        />
+      </fieldset>
+      <div class="controles">
         <button id="entrada" class="button">Entrada</button>
-        <button id="saida" class="button">Saída</button>     
-    </div>
-</body>
+        <button id="saida" class="button">Saída</button>
+      </div>
+    </form>
+  </body>
+</html>
