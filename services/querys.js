@@ -20,11 +20,26 @@ export async function getAlunoByCpf(cpf, conn) {
   }
 }
 
-export async function getHorasByDate(cpf, conn, date) {
+function calcHoras(horas) {
+  let totalSegundos = horas.reduce((acc, registro) => {
+    const hora_total = registro.HORA_TOTAL;
+    const timeString = hora_total.substring(4, 12);
+    const parts = timeString.split(":");
+    const horas = parseInt(parts[0], 10);
+    const minutos = parseInt(parts[1], 10);
+    const segundos = parseInt(parts[2], 10);
+
+    return acc + horas * 3600 + minutos * 60 + segundos;
+  }, 0);
+
+  return totalSegundos / 3600;
+}
+
+export async function getHorasTotais(cpf, conn) {
   try {
     const result = await conn.execute(
-      `SELECT HORA_ENTRADA, HORA_SAIDA FROM REGISTROS_CATRACA WHERE CPF_ALUNO = :cpf AND DATA_REGISTRO = TO_DATE(:date, 'YYYY-MM-DD')`,
-      [cpf, date]
+      `SELECT TO_CHAR(HORA_TOTAL, 'HH24:MI:SS') AS HORA_TOTAL FROM REGISTROS_CATRACA WHERE CPF_ALUNO = :cpf`,
+      [cpf]
     );
     return result.rows.length > 0 ? result.rows : null;
   } catch (err) {
@@ -36,10 +51,12 @@ export async function getHorasSemanais(cpf, conn) {
   try {
     const result = await conn.execute(
       `
-        SELECT TO_CHAR(HORA_TOTAL, 'HH24:MI:SS') AS HORA_TOTAL, DATA_REGISTRO 
-        FROM REGISTROS_CATRACA 
-        WHERE CPF_ALUNO = :cpf AND DATA_REGISTRO >= SYSDATE - 7 AND DATA_REGISTRO <= SYSDATE 
-        ORDER BY DATA_REGISTRO DESC
+      SELECT TO_CHAR(HORA_TOTAL, 'HH24:MI:SS') AS HORA_TOTAL, DATA_REGISTRO 
+      FROM REGISTROS_CATRACA 
+      WHERE CPF_ALUNO = :cpf 
+      AND DATA_REGISTRO >= TRUNC(SYSDATE) - 7 
+      AND DATA_REGISTRO <= TRUNC(SYSDATE) + 1 
+      ORDER BY DATA_REGISTRO DESC
       `,
       [cpf]
     );
@@ -51,20 +68,9 @@ export async function getHorasSemanais(cpf, conn) {
       return 0;
     }
 
-    let totalHoras = result.rows.reduce((acc, registro) => {
-      const hora_total = registro.HORA_TOTAL;
-      const timeString = hora_total.substring(4, 12);
-      const parts = timeString.split(":");
-      const horas = parseInt(parts[0], 10);
-      const minutos = parseInt(parts[1], 10);
-      const segundos = parseInt(parts[2], 10);
-
-      return acc + horas * 3600 + minutos * 60 + segundos;
-    }, 0);
-
-    const mediaHoras = totalHoras / (7 * 3600);
-    const horasInteiras = Math.floor(mediaHoras);
-    const minutos = Math.round((mediaHoras - horasInteiras) * 60);
+    const totalHoras = calcHoras(result.rows);
+    const horasInteiras = Math.floor(totalHoras);
+    const minutos = Math.round((totalHoras - horasInteiras) * 60);
     const horasArredondadas = minutos >= 30 ? horasInteiras + 1 : horasInteiras;
     return horasArredondadas;
   } catch (err) {
