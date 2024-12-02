@@ -20,21 +20,6 @@ export async function getAlunoByCpf(cpf, conn) {
   }
 }
 
-function calcHoras(horas) {
-  let totalSegundos = horas.reduce((acc, registro) => {
-    const hora_total = registro.HORA_TOTAL;
-    const timeString = hora_total.substring(4, 12);
-    const parts = timeString.split(":");
-    const horas = parseInt(parts[0], 10);
-    const minutos = parseInt(parts[1], 10);
-    const segundos = parseInt(parts[2], 10);
-
-    return acc + horas * 3600 + minutos * 60 + segundos;
-  }, 0);
-
-  return totalSegundos / 3600;
-}
-
 export async function getHorasTotais(cpf, conn) {
   try {
     const result = await conn.execute(
@@ -50,7 +35,7 @@ export async function getHorasTotais(cpf, conn) {
     );
     return result.rows.length > 0 ? result.rows[0].TOTAL_HORAS : null;
   } catch (err) {
-    throw new Error("Erro ao consultar horas: " + err);
+    throw new Error("Erro ao consultar horas: " + err.message);
   }
 }
 
