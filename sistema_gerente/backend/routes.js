@@ -1,25 +1,52 @@
 import express from "express";
 import { createPool, getConnection } from "../../bd/connection.js";
-import { getAlunoById } from "../../services/querys.js";
+import { getAlunoById, getHorasTotais } from "../../services/querys.js";
 
 const router = express.Router();
 createPool();
 
 router.get("/alunos", async (req, res) => {
+  let conn = await getConnection();
   try {
-    const connection = await getConnection();
-    const result = await connection.execute("SELECT * FROM ALUNOS");
-    res.json(result.rows);
+    const alunos = await conn.execute(
+      `SELECT CPF, NOME_COMPLETO FROM ALUNOS`
+    );
+    if(alunos.rows.length === 0){
+      return res.status(404).send("Nenhum aluno encontrado");
+    }
+    const info_aluno = [];
+
+    for(const aluno of alunos.rows) {
+      const cpf = aluno.CPF;
+      const nome_completo = aluno.NOME_COMPLETO;
+      const horas_totais = await getHorasTotais(cpf, conn);
+
+      info_aluno.push({
+        nome: nome_completo,
+        horas_treinadas: horas_totais ? horas_totais[0].HORA_TOTAL : "00:00:00",
+      });
+    }
+
+    const lista_alunos = alunos.rows.map(aluno => [aluno.CPF, aluno.NOME_COMPLETO]);//transformando obj em array
+
+    console.log(lista_alunos);
+    res.status(200).json(info_aluno);//array será ordenado no front
   } catch (err) {
     console.error(err);
     res.status(500).send("Erro ao consultar alunos");
+  } finally {
+    try {
+      await conn.close();
+    } catch (err) {
+      console.error("Erro ao fechar a conexão: ", err);
+    }
   }
 });
 
 router.get("/alunos/:id", async (req, res) => {
   try {
-    const connection = await getConnection();
-    const aluno = await getAlunoById(req.params.id, connection);
+    let conn = await getConnection();
+    const aluno = await getAlunoById(req.params.id, conn);
     res.json(aluno);
   } catch (err) {
     console.error(err);
@@ -30,10 +57,10 @@ router.get("/alunos/:id", async (req, res) => {
 // router.get("/ord_alunos/:order", async (req, res) => {
 //   try {
 //     const ordenacao = req.params.order;
-//     const connection = await getConnection();
+//     let conn = await getConnection();
 //     let result = null;
 //     if (ordenacao === "classificacao") {
-//       result = await connection.execute(
+//       result = await conn.execute(
 //         `SELECT *
 //       FROM ALUNOS
 //       ORDER BY
