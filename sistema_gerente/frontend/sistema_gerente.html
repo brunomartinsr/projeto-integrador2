@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="sistema_gerente.css" />
+    <script defer src="script.js"></script>
+    <title>Sistema do Gerente</title>
+  </head>
+  <body>
+    <h1>Sistema do Gerente</h1>
+    <label id="qtd_totalAlunos"
+      >Quantidade total de alunos: Carregando...</label
+    >
+    <div id="listaAlunosContainer">
+      <h2>Lista de Alunos</h2>
+      <label for="filtro">Filtrar por:</label>
+      <select id="filtro">
+        <option value="horas">Horas Totais</option>
+        <option value="nome">Nome</option>
+        <option value="nascimento">Data de Nascimento</option>
+        <option value="peso">Peso</option>
+        <option value="altura">Altura</option>
+      </select>
+      <ul id="listaAlunos"></ul>
+    </div>
+  </body>
+</html>

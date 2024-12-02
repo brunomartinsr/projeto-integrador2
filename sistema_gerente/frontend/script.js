@@ -1,47 +1,44 @@
-let alunos = [];
-
-async function carregarDadosAlunos() {
-  const response = await fetch("http://localhost:3000/gerente/alunos");
-  alunos = await response.json();
-  atualizarListaAlunos();
+async function carregarDadosAlunos(filtro = null) {
+  let response = null;
+  if (filtro === null) {
+    response = await fetch("http://localhost:3000/gerente/alunos");
+  } else {
+    response = await fetch(
+      `http://localhost:3000/gerente/ord_alunos/${filtro}`
+    );
+  }
+  return await response.json();
 }
 
-function atualizarListaAlunos(alunosLista) {
-  alunosLista.innerHTML = "";
+function popularLista(alunos, alunosLista) {
   alunos.forEach((aluno) => {
     const alunoItem = document.createElement("li");
-    alunoItem.textContent = aluno.nome;
+    alunoItem.id = "aluno_item";
+    const alunoLink = document.createElement("a");
+    alunoLink.id = "aluno_link";
+
+    alunoLink.href = `./aluno.html?id=${aluno[0]}`;
+    alunoLink.textContent = aluno[1];
+    alunoItem.appendChild(alunoLink);
+    if (aluno[2] !== undefined) {
+      const dadoAdicional = document.createElement("span");
+      dadoAdicional.id = "dado_adicional";
+      dadoAdicional.textContent = aluno[2];
+      alunoItem.appendChild(dadoAdicional);
+    }
+    alunosLista.appendChild(alunoItem);
   });
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const alunosLista = document.getElementById("alunos");
+  const alunosLista = document.getElementById("listaAlunos");
+  let alunos = await carregarDadosAlunos();
+  popularLista(alunos, alunosLista);
 
-  alunos.forEach((aluno) => {
-    const alunoItem = document.createElement("li");
-    alunoItem.textContent = aluno.nome;
-    alunosLista.appendChild(alunoItem);
-  });
-
-  const ordenacao = document.getElementById("ordenacao");
-  ordenacao.addEventListener("change", () => {
-    alunos.sort((a, b) => {
-      if (ordenacao.value === "classificacao") {
-        const classificacoes = [
-          "EXTREMAMENTE AVANÇADO",
-          "AVANÇADO",
-          "INTERMEDIÁRIO",
-          "INICIANTE",
-        ];
-        return (
-          classificacoes.indexOf(a.classificacao) -
-          classificacoes.indexOf(b.classificacao)
-        );
-      } else {
-        return a[ordenacao.value] > b[ordenacao.value] ? 1 : -1;
-      }
-    });
-
-    atualizarListaAlunos(alunosLista);
+  const filtro = document.getElementById("filtro");
+  filtro.addEventListener("change", () => {
+    alunosLista.innerHTML = "";
+    alunos = carregarDadosAlunos(filtro.value);
+    popularLista(alunos, alunosLista);
   });
 });

@@ -38,10 +38,17 @@ function calcHoras(horas) {
 export async function getHorasTotais(cpf, conn) {
   try {
     const result = await conn.execute(
-      `SELECT TO_CHAR(HORA_TOTAL, 'HH24:MI:SS') AS HORA_TOTAL FROM REGISTROS_CATRACA WHERE CPF_ALUNO = :cpf`,
+      `
+      SELECT 
+      TRUNC(SUM(EXTRACT(HOUR FROM HORA_TOTAL) * 3600 +
+                 EXTRACT(MINUTE FROM HORA_TOTAL) * 60 +
+                 EXTRACT(SECOND FROM HORA_TOTAL)) / 3600) AS TOTAL_HORAS
+      FROM REGISTROS_CATRACA
+      WHERE CPF_ALUNO = :cpf
+      GROUP BY CPF_ALUNO`,
       [cpf]
     );
-    return result.rows.length > 0 ? result.rows : null;
+    return result.rows.length > 0 ? result.rows[0].TOTAL_HORAS : null;
   } catch (err) {
     throw new Error("Erro ao consultar horas: " + err);
   }
@@ -51,7 +58,9 @@ export async function getHorasSemanais(cpf, conn) {
   try {
     const result = await conn.execute(
       `
-      SELECT TO_CHAR(HORA_TOTAL, 'HH24:MI:SS') AS HORA_TOTAL, DATA_REGISTRO 
+      SELECT TRUNC(SUM(EXTRACT(HOUR FROM HORA_TOTAL) * 3600 +
+                 EXTRACT(MINUTE FROM HORA_TOTAL) * 60 +
+                 EXTRACT(SECOND FROM HORA_TOTAL)) / 3600) AS TOTAL_HORAS 
       FROM REGISTROS_CATRACA 
       WHERE CPF_ALUNO = :cpf 
       AND DATA_REGISTRO >= TRUNC(SYSDATE) - 7 
@@ -67,12 +76,7 @@ export async function getHorasSemanais(cpf, conn) {
       );
       return 0;
     }
-
-    const totalHoras = calcHoras(result.rows);
-    const horasInteiras = Math.floor(totalHoras);
-    const minutos = Math.round((totalHoras - horasInteiras) * 60);
-    const horasArredondadas = minutos >= 30 ? horasInteiras + 1 : horasInteiras;
-    return horasArredondadas;
+    return result.rows[0].TOTAL_HORAS;
   } catch (err) {
     console.error("Erro ao obter horas semanais:", err);
     throw new Error("Erro ao obter horas semanais: " + err);

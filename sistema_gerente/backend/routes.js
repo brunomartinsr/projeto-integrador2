@@ -9,28 +9,35 @@ router.get("/alunos", async (req, res) => {
   let conn = await getConnection();
   try {
     const alunos = await conn.execute(
-      `SELECT CPF, NOME_COMPLETO FROM ALUNOS`
+      `SELECT ID, CPF, NOME_COMPLETO FROM ALUNOS`
     );
-    if(alunos.rows.length === 0){
+    if (alunos.rows.length === 0) {
       return res.status(404).send("Nenhum aluno encontrado");
     }
-    const info_aluno = [];
+    const listaAlunos = [];
 
-    for(const aluno of alunos.rows) {
+    for (const aluno of alunos.rows) {
+      const id = aluno.ID;
       const cpf = aluno.CPF;
-      const nome_completo = aluno.NOME_COMPLETO;
-      const horas_totais = await getHorasTotais(cpf, conn);
-
-      info_aluno.push({
-        nome: nome_completo,
-        horas_treinadas: horas_totais ? horas_totais[0].HORA_TOTAL : "00:00:00",
-      });
+      const nome = aluno.NOME_COMPLETO;
+      const horas_totais = (await getHorasTotais(cpf, conn))
+        ? await getHorasTotais(cpf, conn)
+        : 0;
+      listaAlunos.push([id, nome, horas_totais]);
     }
 
-    const lista_alunos = alunos.rows.map(aluno => [aluno.CPF, aluno.NOME_COMPLETO]);//transformando obj em array
+    listaAlunos.sort((a, b) => {
+      if (a[2] < b[2]) {
+        return 1;
+      }
+      if (a[2] > b[2]) {
+        return -1;
+      }
+      return 0;
+    });
 
-    console.log(lista_alunos);
-    res.status(200).json(info_aluno);//array será ordenado no front
+    console.log(listaAlunos);
+    res.status(200).json(listaAlunos);
   } catch (err) {
     console.error(err);
     res.status(500).send("Erro ao consultar alunos");
