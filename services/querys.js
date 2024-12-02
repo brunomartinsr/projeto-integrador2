@@ -20,30 +20,43 @@ export async function getAlunoByCpf(cpf, conn) {
   }
 }
 
-function calcHoras(horas) {
-  let totalSegundos = horas.reduce((acc, registro) => {
-    const hora_total = registro.HORA_TOTAL;
-    const timeString = hora_total.substring(4, 12);
-    const parts = timeString.split(":");
-    const horas = parseInt(parts[0], 10);
-    const minutos = parseInt(parts[1], 10);
-    const segundos = parseInt(parts[2], 10);
+export function calcHoras(horas) {
+  if (horas && typeof horas === "string") {
+    const timeString = horas.substring(11, 19);  
+    const parts = timeString.split(":"); 
 
-    return acc + horas * 3600 + minutos * 60 + segundos;
-  }, 0);
+    const horasPart = parseInt(parts[0], 10);  
+    const minutos = parseInt(parts[1], 10);  
+    const segundos = parseInt(parts[2], 10);  
 
-  return totalSegundos / 3600;
+    return horasPart * 3600 + minutos * 60 + segundos;
+  }
+
+  return 0;
 }
 
 export async function getHorasTotais(cpf, conn) {
   try {
     const result = await conn.execute(
-      `SELECT TO_CHAR(HORA_TOTAL, 'HH24:MI:SS') AS HORA_TOTAL FROM REGISTROS_CATRACA WHERE CPF_ALUNO = :cpf`,
+      `SELECT 
+        TO_CHAR(
+          NUMTODSINTERVAL(
+            SUM(
+              EXTRACT(HOUR FROM HORA_TOTAL) * 3600 +
+              EXTRACT(MINUTE FROM HORA_TOTAL) * 60 +
+              EXTRACT(SECOND FROM HORA_TOTAL)
+            ), 
+            'SECOND'
+          ),
+          'HH24:MI:SS'
+        ) AS HORA_TOTAL
+      FROM REGISTROS_CATRACA 
+      WHERE CPF_ALUNO = :cpf`,
       [cpf]
     );
-    return result.rows.length > 0 ? result.rows : null;
+    return result.rows.length > 0 ? result.rows : "00:00:00";
   } catch (err) {
-    throw new Error("Erro ao consultar horas: " + err);
+    throw new Error("Erro ao consultar horas: " + err.message);
   }
 }
 

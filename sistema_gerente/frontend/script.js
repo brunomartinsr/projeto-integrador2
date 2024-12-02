@@ -3,7 +3,7 @@ let alunos = [];
 async function carregarDadosAlunos() {
   const response = await fetch("http://localhost:3000/gerente/alunos");
   alunos = await response.json();
-  atualizarListaAlunos();
+  atualizarListaAlunos(alunos);
 }
 
 function atualizarListaAlunos(alunosLista) {
