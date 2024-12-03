@@ -70,12 +70,15 @@ export async function getHorasSemanais(cpf, conn) {
 
 export async function atualizarClassificacao(cpf, classificacao, conn) {
   try {
+    console.log(`Atualizando classificação para CPF: ${cpf}, Classificação: ${classificacao}`);
     await conn.execute(
       `UPDATE ALUNOS SET CLASSIFICACAO = :classificacao WHERE CPF = :cpf`,
       [classificacao, cpf],
       { autoCommit: true }
     );
+    console.log('Classificação atualizada com sucesso');
   } catch (err) {
+    console.error("Erro ao atualizar classificação: ", err);
     throw new Error("Erro ao atualizar classificação: " + err);
   }
 }

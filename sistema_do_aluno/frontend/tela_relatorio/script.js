@@ -2,15 +2,15 @@ async function obterDadosAluno(id) {
 
     try {
         const response = await fetch(`http://localhost:3000/aluno/relatorio/${id}`);
-        if(!response.ok) throw new Error("Erro ao obter dados do aluno");
+        if(response.status === 500 ) throw new Error("Erro ao obter dados do aluno");
         const dadosAluno = await response.json();
 
         document.getElementById('frequencia').textContent = dadosAluno.horas_semanais;
         document.getElementById('classificacao').textContent = dadosAluno.classificacao;
 
     }catch (error){
-        alert("Erro ao exibir as informações do relatório");
         console.log('Erro na requisição', error);
+        alert("Erro ao exibir as informações do relatório");
     }
 }
 

@@ -101,7 +101,7 @@ function determinarClassificacao(horasSemanais) {
   if (horasSemanais <= 5) return "INICIANTE";
   if (horasSemanais <= 10) return "INTERMEDIÁRIO";
   if (horasSemanais <= 20) return "AVANÇADO";
-  return "EXTREMAMENTE AVANÇADO";
+  else return "EXTREMAMENTE AVANÇADO";
 }
 
 // Rota para obter o relatório do aluno por ID
