@@ -22,9 +22,22 @@ h1, h2{
 #listaAlunosContainer {
     margin: 20px auto;
     width: 80%;
+    color: white;
     background: linear-gradient(to right, rgb(29, 26, 26), rgb(69, 2, 2));
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
 }
 
+#filtro {
+    border: 1px solid rgb(255, 255, 255);
+    border-radius: 5px;
+    background-color: rgb(39, 1, 1);
+    color: rgb(255, 255, 255);
+    font-size: 15px;
+}
+
+#filtro:focus {
+    border-color: rgb(76, 1, 1);
+    box-shadow: 0 0 5px rgb(72, 1, 1);
+}
