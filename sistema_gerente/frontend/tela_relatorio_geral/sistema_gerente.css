@@ -1,0 +1,69 @@
+body{
+    background-color: rgb(37, 34, 34);
+}
+
+h1, h2{
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+    color:rgb(255, 255, 255);
+}
+
+#qtd_totalAlunos{
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+    margin-top: 5px;
+    color: white;
+}
+
+#listaAlunosContainer {
+    margin: 20px auto;
+    width: 80%;
+    color: white;
+    background: linear-gradient(to right, rgb(29, 26, 26), rgb(69, 2, 2));
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+}
+
+#filtro {
+    border: 1px solid rgb(255, 255, 255);
+    border-radius: 5px;
+    background-color: rgb(39, 1, 1);
+    color: rgb(255, 255, 255);
+    font-size: 15px;
+}
+
+#filtro:focus {
+    border-color: rgb(76, 1, 1);
+    box-shadow: 0 0 5px rgb(72, 1, 1);
+}
+
+#aluno_link{
+    color: white;
+    text-decoration: none;
+}
+
+#aluno_link:hover{
+    color: rgb(124, 4, 4);
+}
+
+#dado_adicional{
+    color: white;
+    width: 70%;
+    margin-left: auto; /* Adiciona margem automática à esquerda */
+    text-align: right; /* Alinha o texto à direita */
+    display: block;
+}
+
+#aluno_item{
+    width: 95%;
+    border-bottom: 1px solid white;
+    padding: 5px 0px;
+    display: flex; /* Adiciona display flex */
+    justify-content: space-between; /* Distribui os elementos */
+    align-items: center;
+}
