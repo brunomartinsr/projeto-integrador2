@@ -1,6 +1,6 @@
 async function carregarDadosAlunos(filtro = null) {
   let response = null;
-  if (filtro === null) {
+  if (filtro === null || filtro === "horas") {
     response = await fetch("http://localhost:3000/gerente/alunos");
   } else {
     response = await fetch(
