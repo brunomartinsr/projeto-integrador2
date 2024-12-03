@@ -99,9 +99,9 @@ router.post("/cadastrar", async (req, res) => {
 // Função para determinar classificação com base nas horas semanais
 function determinarClassificacao(horasSemanais) {
   if (horasSemanais <= 5) return "INICIANTE";
-  if (horasSemanais <= 10) return "INTERMEDIÁRIO";
-  if (horasSemanais <= 20) return "AVANÇADO";
-  return "EXTREMAMENTE AVANÇADO";
+  else if (horasSemanais <= 10) return "INTERMEDIÁRIO";
+  else if (horasSemanais <= 20) return "AVANÇADO";
+  else return "EXTREMAMENTE AVANÇADO";
 }
 
 // Rota para obter o relatório do aluno por ID
