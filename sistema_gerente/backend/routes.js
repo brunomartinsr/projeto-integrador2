@@ -1,6 +1,6 @@
 import express from "express";
 import { createPool, getConnection } from "../../bd/connection.js";
-import { getAlunoById, getHorasTotais } from "../../services/querys.js";
+import { getAlunoById, getHorasSemanais, getHorasTotais } from "../../services/querys.js";
 
 const router = express.Router();
 createPool();
@@ -54,10 +54,24 @@ router.get("/alunos/:id", async (req, res) => {
   try {
     let conn = await getConnection();
     const aluno = await getAlunoById(req.params.id, conn);
-    res.json(aluno);
+
+    if(!aluno) {
+      return res.status(404).send("Aluno não encontrado");
+    }
+
+    const horas_semanais = await getHorasSemanais(aluno.CPF, conn);
+    aluno.horas_semanais = horas_semanais
+    res.json(aluno);   
+     
   } catch (err) {
     console.error(err);
     res.status(500).send("Erro ao consultar aluno");
+  } finally {
+    try {
+      await conn.close();
+    } catch(err) {
+      console.error("Erro ao fechar conexão", conn);
+    }
   }
 });
 
