@@ -1,6 +1,7 @@
 import express from "express";
 import { createPool, getConnection } from "../../bd/connection.js";
-import { getAlunoById, getHorasTotais } from "../../services/querys.js";
+import { getAlunoById, getHorasSemanais, getHorasTotais } from "../../services/querys.js";
+import { formatDate } from "../../services/formaters.js";
 
 const router = express.Router();
 createPool();
@@ -54,7 +55,8 @@ router.get("/alunos/:id", async (req, res) => {
   try {
     let conn = await getConnection();
     const aluno = await getAlunoById(req.params.id, conn);
-    res.json(aluno);
+    const horas_semanais = await getHorasSemanais(aluno.CPF, conn);
+    res.json({...aluno, HORAS_SEMANAIS: horas_semanais});
   } catch (err) {
     console.error(err);
     res.status(500).send("Erro ao consultar aluno");
@@ -63,11 +65,13 @@ router.get("/alunos/:id", async (req, res) => {
 
 router.get("/ord_alunos/:order", async (req, res) => {
   const ordenacao = req.params.order;
+  let valorOrdenacao = null;
   const conn = await getConnection();
   let alunos = null;
   try {
     switch (ordenacao) {
       case "nome":
+        valorOrdenacao = "NOME_COMPLETO";
         alunos = await conn.execute(
           `SELECT ID, NOME_COMPLETO
           FROM ALUNOS
@@ -75,6 +79,7 @@ router.get("/ord_alunos/:order", async (req, res) => {
         );
         break;
       case "nascimento":
+        valorOrdenacao = "DATA_DE_NASCIMENTO";
         alunos = await conn.execute(
           `SELECT ID, NOME_COMPLETO, DATA_DE_NASCIMENTO
           FROM ALUNOS
@@ -82,6 +87,7 @@ router.get("/ord_alunos/:order", async (req, res) => {
         );
         break;
       case "peso":
+        valorOrdenacao = "PESO";
         alunos = await conn.execute(
           `SELECT ID, NOME_COMPLETO, PESO
           FROM ALUNOS
@@ -89,6 +95,7 @@ router.get("/ord_alunos/:order", async (req, res) => {
         );
         break;
       case "altura":
+        valorOrdenacao = "ALTURA";
         alunos = await conn.execute(
           `SELECT ID, NOME_COMPLETO, ALTURA
           FROM ALUNOS
@@ -98,7 +105,20 @@ router.get("/ord_alunos/:order", async (req, res) => {
       default:
         return res.status(400).res("Ordenação inválida");
     }
-    alunos = alunos.rows;
+
+    alunos = alunos.rows.map((aluno) => {
+      if (valorOrdenacao === "DATA_DE_NASCIMENTO") {
+        return [
+          aluno.ID,
+          aluno.NOME_COMPLETO,
+          formatDate(new Date(aluno[valorOrdenacao])),
+        ];
+      } else if (valorOrdenacao === "NOME_COMPLETO") {
+        return [aluno.ID, aluno.NOME_COMPLETO];
+      }
+      return [aluno.ID, aluno.NOME_COMPLETO, aluno[valorOrdenacao]];
+    });
+    console.log(alunos)
     res.json(alunos);
   } catch (err) {
     console.error(err);

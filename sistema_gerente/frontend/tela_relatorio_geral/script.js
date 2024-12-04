@@ -17,7 +17,7 @@ function popularLista(alunos, alunosLista) {
     const alunoLink = document.createElement("a");
     alunoLink.id = "aluno_link";
 
-    alunoLink.href = `./aluno.html?id=${aluno[0]}`;
+    alunoLink.href = `../tela_relatorio_individual/aluno.html?id=${aluno[0]}`;
     alunoLink.textContent = aluno[1];
     alunoItem.appendChild(alunoLink);
     if (aluno[2] !== undefined) {
