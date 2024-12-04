@@ -1,4 +1,5 @@
 import { formatTime, formatDate } from "../../services/formaters.js";
+import { checkCPF } from "../../services/validators.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementsByTagName("form")[0];
@@ -11,25 +12,33 @@ document.addEventListener("DOMContentLoaded", () => {
   const dataRegistro = formatDate(new Date());
 
   btnEntrada.addEventListener("click", () => {
-    if (horaEntrada === null) {
-      horaEntrada = formatTime(new Date());
-      console.log(horaEntrada)
-      alert("Entrada registrada");
+    if(checkCPF(cpfInput.value)){
+      if (horaEntrada === null) {
+        horaEntrada = formatTime(new Date());
+        console.log(horaEntrada)
+        alert("Entrada registrada");
+      } else {
+        alert("Entrada já registrada");
+      }
     } else {
-      alert("Entrada já registrada");
+      alert("CPF não informado")
     }
   });
 
   btnSaida.addEventListener("click", () => {
-    if (horaEntrada !== null && horaSaida
-       === null) {
-      horaSaida = formatTime(new Date());
-      console.log(horaSaida)
-      alert("Saída registrada");
-    } else if (horaEntrada === null) {
-      alert("É necessário registrar a entrada antes da saída");
+    if(checkCPF(cpfInput.value)){
+      if (horaEntrada !== null && horaSaida
+        === null) {
+       horaSaida = formatTime(new Date());
+       console.log(horaSaida)
+       alert("Saída registrada");
+     } else if (horaEntrada === null) {
+       alert("É necessário registrar a entrada antes da saída");
+     } else {
+       alert("Saída já registrada");
+     }
     } else {
-      alert("Saída já registrada");
+      alert("CPF não informado")
     }
   });
 
