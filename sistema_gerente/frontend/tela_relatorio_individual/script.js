@@ -21,14 +21,14 @@ async function obterDadosAluno(id) {
     }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    const paramsURL = new URLSearchParams(window.location.search);
-    const id = paramsURL.get("id");
+// document.addEventListener("DOMContentLoaded", () => {
+//     const paramsURL = new URLSearchParams(window.location.search);
+//     const id = paramsURL.get("id");
 
-    if(id){
-        obterDadosAluno(id);
-    } else {
-        console.log("Erro ao pegar ID da URL");
-        alert("ID não encontrado na URL");
-    }
-});
+//     if(id){
+//         obterDadosAluno(id);
+//     } else {
+//         console.log("Erro ao pegar ID da URL");
+//         alert("ID não encontrado na URL");
+//     }
+// });

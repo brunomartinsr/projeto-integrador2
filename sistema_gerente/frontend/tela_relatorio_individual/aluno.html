@@ -1,31 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<<<<<<< HEAD
-    <link rel="ActiveFit icon" href="/Sistema_catraca/imagem/FT SITE.png">
-    <title>Document</title>
-=======
     <link rel="stylesheet" href="aluno.css">
-    <title>Relatorio Individual do Aluno</title>
->>>>>>> 1c924e6635ab9f2ced456fc4cdad6cbaefbd56a0
+    <title>Relatório Individual do Aluno</title>
     <script defer src="script.js"></script>
 </head>
 <body>
-    <div class="sidebar">
-      <img src="../tela_relatorio_individual/FotoPerfil.jpg" alt="Foto de Perfil" class="avatar">
-      <p>Olá gerente</p>
-    </div>
-    <div class="info_freq">
-      <div class="card">
-        <h2>Frequência:</h2>
-        <div class="value" id="horas_semanais"></div>  
-      </div>
-      <div class="card">
-        <h2>Classificação:</h2> 
-        <div class="value" id="classificacao"></div>  
-      </div>
+    <div class="container">
+        <h1>Relatório do Aluno</h1>
+        
+        <div class="content-wrapper">
+            <div class="foto-aluno">
+                <img src="../Imagens/FotoPerfil.jpg" alt="Foto do Aluno">
+            </div>
+            
+            <div class="info-container">
+                <div class="dados-principais">
+                    <div class="info-row">
+                        <span class="label">NOME:</span>
+                        <span class="value" id="nome"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">CPF:</span>
+                        <span class="value" id="cpf"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">TELEFONE:</span>
+                        <span class="value" id="telefone"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">MATRÍCULA:</span>
+                        <span class="value" id="matricula"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">EMAIL:</span>
+                        <span class="value" id="email"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">DATA DE NASCIMENTO:</span>
+                        <span class="value" id="data_nascimento"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">PESO:</span>
+                        <span class="value" id="peso"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">ALTURA:</span>
+                        <span class="value" id="altura"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="cards-container">
+            <div class="card">
+                <h2>CLASSIFICAÇÃO</h2>
+                <div class="card-value" id="classificacao"></div>
+            </div>
+            <div class="card">
+                <h2>HORAS SEMANAL</h2>
+                <div class="card-value" id="horas_semanais"></div>
+            </div>
+        </div>
     </div>
 </body>
 </html>
