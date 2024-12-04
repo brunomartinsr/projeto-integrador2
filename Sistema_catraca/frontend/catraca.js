@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
   btnEntrada.addEventListener("click", () => {
     if (horaEntrada === null) {
       horaEntrada = formatTime(new Date());
+      console.log(horaEntrada)
       alert("Entrada registrada");
     } else {
       alert("Entrada já registrada");
@@ -20,8 +21,10 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   btnSaida.addEventListener("click", () => {
-    if (horaEntrada !== null && horaSaida === null) {
+    if (horaEntrada !== null && horaSaida
+       === null) {
       horaSaida = formatTime(new Date());
+      console.log(horaSaida)
       alert("Saída registrada");
     } else if (horaEntrada === null) {
       alert("É necessário registrar a entrada antes da saída");
