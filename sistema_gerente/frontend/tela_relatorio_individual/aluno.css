@@ -52,6 +52,7 @@ h1 {
 .label {
     font-weight: bold;
 }
+
 .cards-container {
     display: flex;
     justify-content: center;
@@ -72,7 +73,7 @@ h1 {
 }
 .card-value {
     color: white;
-    font-size: 24px;
+    font-size: 16px;
     font-weight: bold;
 }
 @media (max-width: 768px) {

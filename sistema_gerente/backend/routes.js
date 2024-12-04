@@ -58,7 +58,17 @@ router.get("/alunos", async (req, res) => {
 router.get("/alunos/:id", async (req, res) => {
   try {
     let conn = await getConnection();
-    const aluno = await getAlunoById(req.params.id, conn);
+    let aluno = await getAlunoById(req.params.id, conn);
+
+    if (!aluno) {
+      return res.status(404).send("Aluno não encontrado.");
+    }
+
+    const nascimento = new Date(aluno.DATA_DE_NASCIMENTO);
+    aluno.DATA_DE_NASCIMENTO = isNaN(nascimento)
+      ? "Data inválida"
+      : formatDate(nascimento, "br");
+      
     const horas_semanais = await getHorasSemanais(aluno.CPF, conn);
     res.json({ ...aluno, HORAS_SEMANAIS: horas_semanais });
   } catch (err) {
@@ -66,6 +76,7 @@ router.get("/alunos/:id", async (req, res) => {
     res.status(500).send("Erro ao consultar aluno");
   }
 });
+
 
 router.get("/ord_alunos/:order", async (req, res) => {
   const ordenacao = req.params.order;
