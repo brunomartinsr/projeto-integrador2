@@ -5,10 +5,11 @@ export const formatTime = (date) => {
   return `${hours}:${minutes}:${seconds}`;
 };
 
-export const formatDate = (date) => {
+export const formatDate = (date, type) => {
   const year = date.getUTCFullYear();
   const month = (date.getUTCMonth() + 1).toString().padStart(2, "0");
   const day = date.getUTCDate().toString().padStart(2, "0");
+  if (type === "br") return `${day}/${month}/${year}`;
   return `${year}-${month}-${day}`;
 };
 

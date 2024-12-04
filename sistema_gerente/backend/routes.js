@@ -1,6 +1,10 @@
 import express from "express";
 import { createPool, getConnection } from "../../bd/connection.js";
-import { getAlunoById, getHorasSemanais, getHorasTotais } from "../../services/querys.js";
+import {
+  getAlunoById,
+  getHorasSemanais,
+  getHorasTotais,
+} from "../../services/querys.js";
 import { formatDate } from "../../services/formaters.js";
 
 const router = express.Router();
@@ -56,7 +60,7 @@ router.get("/alunos/:id", async (req, res) => {
     let conn = await getConnection();
     const aluno = await getAlunoById(req.params.id, conn);
     const horas_semanais = await getHorasSemanais(aluno.CPF, conn);
-    res.json({...aluno, HORAS_SEMANAIS: horas_semanais});
+    res.json({ ...aluno, HORAS_SEMANAIS: horas_semanais });
   } catch (err) {
     console.error(err);
     res.status(500).send("Erro ao consultar aluno");
@@ -83,7 +87,7 @@ router.get("/ord_alunos/:order", async (req, res) => {
         alunos = await conn.execute(
           `SELECT ID, NOME_COMPLETO, DATA_DE_NASCIMENTO
           FROM ALUNOS
-          ORDER BY DATA_DE_NASCIMENTO DESC`
+          ORDER BY DATA_DE_NASCIMENTO ASC`
         );
         break;
       case "peso":
@@ -102,6 +106,14 @@ router.get("/ord_alunos/:order", async (req, res) => {
           ORDER BY ALTURA DESC`
         );
         break;
+      case "matricula":
+        valorOrdenacao = "MATRICULA";
+        alunos = await conn.execute(
+          `SELECT ID, NOME_COMPLETO
+          FROM ALUNOS WHERE MATRICULA = 'ATIVA'
+          ORDER BY NOME_COMPLETO ASC`
+        );
+        break;
       default:
         return res.status(400).res("Ordenação inválida");
     }
@@ -111,14 +123,17 @@ router.get("/ord_alunos/:order", async (req, res) => {
         return [
           aluno.ID,
           aluno.NOME_COMPLETO,
-          formatDate(new Date(aluno[valorOrdenacao])),
+          formatDate(new Date(aluno[valorOrdenacao]), "br"),
         ];
-      } else if (valorOrdenacao === "NOME_COMPLETO") {
+      } else if (
+        valorOrdenacao === "NOME_COMPLETO" ||
+        valorOrdenacao === "MATRICULA"
+      ) {
         return [aluno.ID, aluno.NOME_COMPLETO];
       }
       return [aluno.ID, aluno.NOME_COMPLETO, aluno[valorOrdenacao]];
     });
-    console.log(alunos)
+    console.log(alunos);
     res.json(alunos);
   } catch (err) {
     console.error(err);

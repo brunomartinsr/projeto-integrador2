@@ -11,6 +11,7 @@ async function carregarDadosAlunos(filtro = null) {
 }
 
 function popularLista(alunos, alunosLista) {
+  alunosLista.innerHTML = "";
   alunos.forEach((aluno) => {
     const alunoItem = document.createElement("li");
     alunoItem.id = "aluno_item";
@@ -36,9 +37,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   popularLista(alunos, alunosLista);
 
   const filtro = document.getElementById("filtro");
-  filtro.addEventListener("change", () => {
-    alunosLista.innerHTML = "";
-    alunos = carregarDadosAlunos(filtro.value);
+  filtro.addEventListener("change", async () => {
+    alunos = await carregarDadosAlunos(filtro.value);
     popularLista(alunos, alunosLista);
   });
 });
