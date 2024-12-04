@@ -1,6 +1,6 @@
 export async function getAlunoById(id, conn) {
   try {
-    const result = await conn.execute(`SELECT * FROM ALUNOS WHERE ID = :id AND ID <= 20`, [
+    const result = await conn.execute(`SELECT * FROM ALUNOS WHERE ID = :id`, [
       id,
     ]);
     return result.rows.length > 0 ? result.rows[0] : null;
