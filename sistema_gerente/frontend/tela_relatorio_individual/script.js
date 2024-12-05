@@ -21,12 +21,12 @@ async function obterDadosAluno(id) {
     }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     const paramsURL = new URLSearchParams(window.location.search);
     const id = paramsURL.get("id");
 
     if(id){
-        obterDadosAluno(id);
+        await obterDadosAluno(id);
     } else {
         console.log("Erro ao pegar ID da URL");
         alert("ID não encontrado na URL");

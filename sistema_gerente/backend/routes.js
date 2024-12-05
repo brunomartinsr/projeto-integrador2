@@ -1,6 +1,7 @@
 import express from "express";
 import { createPool, getConnection } from "../../bd/connection.js";
 import {
+  atualizarClassificacao,
   getAlunoById,
   getHorasSemanais,
   getHorasTotais,
@@ -55,10 +56,17 @@ router.get("/alunos", async (req, res) => {
   }
 });
 
+function determinarClassificacao(horasSemanais) {
+  if (horasSemanais <= 5) return "INICIANTE";
+  if (horasSemanais <= 10) return "INTERMEDIÁRIO";
+  if (horasSemanais <= 20) return "AVANÇADO";
+  else return "EXTREMAMENTE AVANÇADO";
+}
+
 router.get("/alunos/:id", async (req, res) => {
   try {
     let conn = await getConnection();
-    let aluno = await getAlunoById(req.params.id, conn);
+    const aluno = await getAlunoById(req.params.id, conn);
 
     if (!aluno) {
       return res.status(404).send("Aluno não encontrado.");
@@ -70,6 +78,19 @@ router.get("/alunos/:id", async (req, res) => {
       : formatDate(nascimento, "br");
       
     const horas_semanais = await getHorasSemanais(aluno.CPF, conn);
+    console.log(aluno.CLASSIFICACAO)
+    if(aluno.CLASSIFICACAO !== null){
+      const classificacao = determinarClassificacao(horas_semanais);
+      await atualizarClassificacao(
+        aluno.CPF, 
+        classificacao,
+        conn
+      );
+      aluno.CLASSIFICACAO = classificacao;
+    } else {
+      aluno.CLASSIFICACAO = "INICIANTE"
+    }
+    console.log(aluno.CLASSIFICACAO)
     res.json({ ...aluno, HORAS_SEMANAIS: horas_semanais });
   } catch (err) {
     console.error(err);
